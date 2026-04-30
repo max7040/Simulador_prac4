@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sorting Analyzer Pro</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background: radial-gradient(circle at top, #0a0f1f, #020617);
+    color: #00d9ff;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.title {
+    text-align:center;
+    margin-top:40px;
+    font-size:40px;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.section {
+    border:1px solid rgba(0,217,255,0.2);
+    padding:25px;
+    margin-top:30px;
+    border-radius:12px;
+    background: rgba(0,0,0,0.4);
+}
+
+.input-box {
+    background: transparent;
+    border:1px solid rgba(0,217,255,0.3);
+    color:white;
+}
+
+.algos {
+    display:flex;
+    gap:20px;
+}
+
+.card-algo {
+    flex:1;
+    padding:20px;
+    text-align:center;
+    border:1px solid rgba(0,217,255,0.3);
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.card-algo:hover {
+    border-color:#00d9ff;
+    box-shadow:0 0 15px #00d9ff;
+}
+
+.selected {
+    border-color:#00d9ff;
+    box-shadow:0 0 20px #00d9ff;
+}
+
+.badge-top {
+    font-size:12px;
+    color:#888;
+}
+
+.progress {
+    height:20px;
+    margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">SORTING ANALYZER PRO</div>
+
+<form method="POST" enctype="multipart/form-data" onsubmit="showProgress()">
+
+<div class="section">
+<h5>01 — DATA SOURCE</h5>
+
+<input type="file" name="file" class="form-control input-box mb-3" required>
+
+<input type="text" name="column" class="form-control input-box" placeholder="e.g. edad, nombre..." required>
+
+</div>
+
+<div class="section">
+<h5>02 — SELECT ALGORITHM</h5>
+
+<div class="algos">
+
+<div class="card-algo" onclick="selectAlgo('quick', this)">
+<div class="badge-top">Comparativo</div>
+<h4>⚡ QUICK</h4>
+<small>O(n log n)</small>
+</div>
+
+<div class="card-algo" onclick="selectAlgo('merge', this)">
+<div class="badge-top">Comparativo</div>
+<h4>🔀 MERGE</h4>
+<small>O(n log n)</small>
+</div>
+
+<div class="card-algo" onclick="selectAlgo('counting', this)">
+<div class="badge-top">No comparativo</div>
+<h4>🔢 COUNTING</h4>
+<small>O(n + k)</small>
+</div>
+
+<div class="card-algo" onclick="selectAlgo('radix', this)">
+<div class="badge-top">No comparativo</div>
+<h4>📊 RADIX</h4>
+<small>O(nk)</small>
+</div>
+
+</div>
+
+<input type="hidden" name="algorithm" id="algorithm" required>
+
+</div>
+
+<div class="section">
+<h5>03 — OUTPUT ORDER</h5>
+
+<select name="order" class="form-select input-box">
+<option value="asc">Ascendente</option>
+<option value="desc">Descendente</option>
+</select>
+
+<button class="btn btn-info mt-4 w-100">Ejecutar</button>
+
+<div class="progress d-none" id="progressBar">
+<div class="progress-bar progress-bar-striped progress-bar-animated" style="width:100%"></div>
+</div>
+
+</div>
+
+</form>
+
+{% if results %}
+<div class="section">
+<h5>RESULTADOS</h5>
+<table class="table table-dark">
+<tr><th>Algoritmo</th><th>Tiempo (ms)</th><th>Tipo</th></tr>
+{% for r in results %}
+<tr>
+<td>{{r.algorithm}}</td>
+<td>{{r.time}}</td>
+<td>{{r.type}}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+{% endif %}
+
+{% if download %}
+<div class="text-center mt-3">
+<a href="/download" class="btn btn-success">Descargar CSV</a>
+</div>
+{% endif %}
+
+</div>
+
+<script>
+function selectAlgo(name, el){
+    document.getElementById("algorithm").value = name;
+    document.querySelectorAll(".card-algo").forEach(c => c.classList.remove("selected"));
+    el.classList.add("selected");
+}
+
+function showProgress(){
+    document.getElementById("progressBar").classList.remove("d-none");
+}
+</script>
+
+</body>
+</html>
